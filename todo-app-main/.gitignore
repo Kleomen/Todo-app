@@ -4,6 +4,8 @@
 *.xd
 
 # Dependencies
+.venv/
+venv/
 /node_modules
 /.pnp
 .pnp.js
