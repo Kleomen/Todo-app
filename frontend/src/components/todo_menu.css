@@ -31,7 +31,6 @@
   width: 2.5vw;
   height: 2.5vw; 
 }
-
 .search_bar{
     width:100%;
     height:8vh;
@@ -47,4 +46,5 @@
     background-color: hsl(235, 24%, 19%);
     border: none;
     color: hsl(0, 0%, 98%);
+    padding-left: 2vw;
 }

@@ -5,20 +5,34 @@ import Task from './task';
 import { useState,inputText } from 'react';
 
 function TodoMenu({ isDarkMode, onToggle }) {
-    const [tasks, setTasks] = useState([]);
-    const [inputText, setInputText] = useState("");
+    const [tasks,setTasks] = useState([]);
+    const [inputText,setInputText] = useState('');
+
+    const toggleCompleted = (id) => {
+        setTasks(tasks.map(task => 
+            task.id === id 
+            ? { ...task, completed: !task.completed }
+            : task                                      
+        ))
+    }
+    const addTask = (text) => {
+        setTasks([...tasks, {
+            id: crypto.randomUUID(), // or date.now() for a simpler unique ID
+            task_name: text,
+            project_name: "Default",
+            priority: "low",
+            due_date: null,
+            completed: false,
+        }])
+    }
 
     const handleKeyDown = (e) => {
-        if (e.key === 'Enter' && inputText.trim() !== '') {
-            const newTask = {
-            text: inputText,
-            completed: false
-            };
-
-            setTasks([...tasks, newTask]);
+        if (e.key === 'Enter' && inputText.trim() !== '') { 
+            addTask(inputText)
             setInputText('');
         }
-        };
+    };
+
     return (
         <div className = "container_menu">
             <div className="footer_menu">
@@ -34,14 +48,17 @@ function TodoMenu({ isDarkMode, onToggle }) {
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    />
+                />
             </div>
-
-            <div className="tasks_container">
-                {tasks.map((task) => (
-                    <Task key={task.id} taskText={task.text} />
-                ))}
-            </div>
+            
+            {tasks.map((task) => (
+                    <Task 
+                    key={task.id} 
+                    taskText={task.task_name}
+                    completed={task.completed}
+                    onToggle={() => toggleCompleted(task.id)} />
+            ))}
+            
         </div>
     )
 }
