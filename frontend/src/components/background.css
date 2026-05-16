@@ -19,5 +19,10 @@
 
 .bg-dark {
   flex: 1;
-  background-color: #171823;
+  background-color: hsl(235, 21%, 11%)
+}
+
+.bg-light {
+  flex: 1;
+  background-color: hsl(0, 0%, 98%)
 }
