@@ -35,7 +35,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
 
     return (
         <div className = "container_menu">
-            <div className="footer_menu">
+            <div className="top_menu">
                 <h1 className='todo'>TODO</h1>
                 <img
                     src={isDarkMode ? sunIcon : moonIcon}              
@@ -44,7 +44,8 @@ function TodoMenu({ isDarkMode, onToggle }) {
                 />
             </div>
             <div className="search_bar">
-                <input placeholder=' Add a new todo...' 
+                <input className={isDarkMode ? "input_bar_dark" : "input_bar_light"}
+                    placeholder=' Add a new todo...' 
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     onKeyDown={handleKeyDown}
@@ -56,8 +57,12 @@ function TodoMenu({ isDarkMode, onToggle }) {
                     key={task.id} 
                     taskText={task.task_name}
                     completed={task.completed}
-                    onToggle={() => toggleCompleted(task.id)} />
+                    onToggle={() => toggleCompleted(task.id)}
+                    isDarkMode={isDarkMode} />
+                    
             ))}
+
+           
             
         </div>
     )
