@@ -11,7 +11,7 @@ function Background({ isDarkMode }) {
         <div className="bg-image">
           <img src={isDarkMode ? bgDark : bgLight} className='image'/>
         </div>
-        <div className={isDarkMode ? 'bg-dark' : 'bg-light'} />
+        <div className="bg-fill" />
       </div>
     </>
   );

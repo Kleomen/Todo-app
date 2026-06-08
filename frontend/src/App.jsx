@@ -8,7 +8,7 @@ function App() {
   const toggleTheme = () => setIsDarkMode(!isDarkMode)
 
   return (
-  <div className="app">
+  <div className={`app ${isDarkMode ? 'dark' : 'light'}`}>
     <Background isDarkMode={isDarkMode} />
     <TodoMenu isDarkMode={isDarkMode} onToggle={toggleTheme} />
     <div className="footer_menu">

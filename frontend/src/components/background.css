@@ -17,12 +17,7 @@
   height: 100%;
 }
 
-.bg-dark {
+.bg-fill {
   flex: 1;
-  background-color: hsl(235, 21%, 11%)
-}
-
-.bg-light {
-  flex: 1;
-  background-color: hsl(0, 0%, 98%)
+  background-color: var(--bg-color);
 }

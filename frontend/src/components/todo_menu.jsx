@@ -44,7 +44,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
                 />
             </div>
             <div className="search_bar">
-                <input className={isDarkMode ? "input_bar_dark" : "input_bar_light"}
+                <input className="input_bar"
                     placeholder=' Add a new todo...' 
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
@@ -52,18 +52,19 @@ function TodoMenu({ isDarkMode, onToggle }) {
                 />
             </div>
             
+            {/*Create a task component for each task in the tasks array*/}
             {tasks.map((task) => (
-                    <Task 
-                    key={task.id} 
+                    <Task
+                    key={task.id}
                     taskText={task.task_name}
                     completed={task.completed}
-                    onToggle={() => toggleCompleted(task.id)}
-                    isDarkMode={isDarkMode} />
+                    onToggle={() => toggleCompleted(task.id)} />
                     
             ))}
 
-           
-            
+            <p>
+                {tasks.filter(task => !task.completed).length} items left
+            </p>
         </div>
     )
 }
