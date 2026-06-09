@@ -11,7 +11,7 @@ function App() {
   <div className={`app ${isDarkMode ? 'dark' : 'light'}`}>
     <Background isDarkMode={isDarkMode} />
     <TodoMenu isDarkMode={isDarkMode} onToggle={toggleTheme} />
-    <div className="footer_menu">
+    <div className="footer_text">
       <p>Drag and drop to reorder list</p>
     </div>
   </div >

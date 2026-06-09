@@ -7,6 +7,7 @@ import { useState,inputText } from 'react';
 function TodoMenu({ isDarkMode, onToggle }) {
     const [tasks,setTasks] = useState([]);
     const [inputText,setInputText] = useState('');
+    const [view, setView] = useState("all");
 
     const toggleCompleted = (id) => {
         setTasks(tasks.map(task => 
@@ -53,7 +54,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
             </div>
             
             {/*Create a task component for each task in the tasks array*/}
-            {tasks.map((task) => (
+            {tasks.filter(task => view === "all" ? task : view === "active" ? !task.completed : task.completed).map((task) => (
                     <Task
                     key={task.id}
                     taskText={task.task_name}
@@ -62,11 +63,24 @@ function TodoMenu({ isDarkMode, onToggle }) {
                     
             ))}
 
-            <p>
-                {tasks.filter(task => !task.completed).length} items left
-            </p>
+            {/* Footer menu */}
+            <div className="footer_menu">
+                <div>
+                    <p>{tasks.filter(task => !task.completed).length} items left</p>
+                </div>
+                <div className="view_options">
+                    <p className={view === "all" ? "selected" : ""} onClick={() => setView("all")} >All</p>
+                    <p className={view === "active" ? "selected" : ""} onClick={() => setView("active")} >Active</p>
+                    <p className={view === "completed" ? "selected" : ""} onClick={() => setView("completed")} >Completed</p>
+                </div>
+                <div>
+                    <p onClick={() => setTasks(tasks.filter(task => !task.completed))}>Clear Completed</p>
+                </div>
+            </div>
+            
         </div>
     )
 }
+
 
 export default TodoMenu;
