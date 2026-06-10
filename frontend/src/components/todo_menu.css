@@ -82,3 +82,40 @@
 .clear_completed {
     cursor: pointer;
 }
+
+/*Mobile responsiveness*/
+@media (max-width: 700px) {
+    
+    .container_menu{
+        width:80%;    
+        z-index: 1;
+        display: flex; 
+        flex-direction: column;
+        margin-top: 5vh;
+    }
+    .todo{
+        font-family: 'Josefin Sans', sans-serif;
+        font-weight: 700;       
+        font-size: 6vw;       
+        letter-spacing: 1vh;  
+        color: hsl(0, 0%, 98%);
+        margin-left: 2vw;
+        margin-top: 3.5vw;
+    }
+    .sun_moon_icon {
+        cursor: pointer;
+        margin-top: 3vw;
+        margin-right: 1.5vw;
+        width: 6vw;
+        height: 6vw; 
+    }        
+    .footer_menu {
+        flex-wrap: wrap;
+    }    
+    .view_options {
+        width: 100%;          /* forces to new line */        
+        justify-content: space-evenly;
+        order: 1;             /* moves it after the other two */
+        border-top: 1px solid hsl(234, 39%, 85%, 0.3);
+    }
+}
