@@ -34,3 +34,13 @@
     height: 100%;
     filter: var(--icon-filter);
 }
+/*delete button*/
+.delete-btn {
+    margin-left: auto;
+    margin-right: 2vw;
+    background: none;
+    border: none;
+    color: var(--footer-text);
+    font-size: 2vh;
+    cursor: pointer;
+}

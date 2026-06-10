@@ -20,7 +20,7 @@
     font-weight: 700;       
     font-size: 3vw;       
     letter-spacing: 1vh;  
-    color: var(--surface-color);
+    color: hsl(0, 0%, 98%);
     margin-left: 2vw;
     margin-top: 3.5vw;
 }
@@ -52,6 +52,11 @@
     border-radius: 10px;
 }
 
+/* Task list */
+.task_list {
+    overflow: hidden;
+}
+
 /* Footer menu */
 .footer_menu {    
     display: flex;
@@ -69,7 +74,11 @@
     display: flex;
     justify-content: space-between;
     width: 40%;
+    cursor: pointer;
 }
 .selected {
     color:  hsl(220, 98%, 61%)
+}
+.clear_completed {
+    cursor: pointer;
 }

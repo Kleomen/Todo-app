@@ -2,7 +2,9 @@ import './todo_menu.css';
 import moonIcon from '../pictures/icon-moon.svg'
 import sunIcon from '../pictures/icon-sun.svg'
 import Task from './task';
-import { useState,inputText } from 'react';
+import { useState } from 'react';
+import {DragDropProvider} from '@dnd-kit/react';
+import {useSortable} from '@dnd-kit/react/sortable';
 
 function TodoMenu({ isDarkMode, onToggle }) {
     const [tasks,setTasks] = useState([]);
@@ -34,6 +36,33 @@ function TodoMenu({ isDarkMode, onToggle }) {
         }
     };
 
+    const clearCompleted = () => {
+    setTasks(tasks.filter(task => !task.completed))
+    }
+
+    const deleteTask = (id) => {
+    setTasks(tasks.filter(task => task.id !== id))
+    }
+
+    const handleDragEnd = (event) => {
+        // if drag was cancelled, do nothing
+        if (event.canceled) return;
+
+        const {source} = event.operation;
+
+        // get old and new positions
+        const {initialIndex, index} = source;
+
+        // only update if position actually changed
+        if (initialIndex !== index) {
+            setTasks((tasks) => {
+                const newTasks = [...tasks];                    // copy the array
+                const [removed] = newTasks.splice(initialIndex, 1);  // remove from old spot
+                newTasks.splice(index, 0, removed);                  // insert at new spot
+                return newTasks;                                     // return new array
+            });
+        }
+    }
     return (
         <div className = "container_menu">
             <div className="top_menu">
@@ -54,14 +83,21 @@ function TodoMenu({ isDarkMode, onToggle }) {
             </div>
             
             {/*Create a task component for each task in the tasks array*/}
-            {tasks.filter(task => view === "all" ? task : view === "active" ? !task.completed : task.completed).map((task) => (
-                    <Task
-                    key={task.id}
-                    taskText={task.task_name}
-                    completed={task.completed}
-                    onToggle={() => toggleCompleted(task.id)} />
-                    
-            ))}
+            <DragDropProvider onDragEnd={handleDragEnd}>
+                <div className="task_list">
+                    {tasks.filter(task => view === "all" ? task : view === "active" ? !task.completed : task.completed).map((task, index) => (
+                        <Task
+                            key={task.id}
+                            id={task.id}
+                            index={index}
+                            taskText={task.task_name}
+                            completed={task.completed}
+                            onToggle={() => toggleCompleted(task.id)}
+                            deleteTask={() => deleteTask(task.id)}
+                        />
+                    ))}
+                </div>
+            </DragDropProvider>
 
             {/* Footer menu */}
             <div className="footer_menu">
@@ -73,8 +109,8 @@ function TodoMenu({ isDarkMode, onToggle }) {
                     <p className={view === "active" ? "selected" : ""} onClick={() => setView("active")} >Active</p>
                     <p className={view === "completed" ? "selected" : ""} onClick={() => setView("completed")} >Completed</p>
                 </div>
-                <div>
-                    <p onClick={() => setTasks(tasks.filter(task => !task.completed))}>Clear Completed</p>
+                <div className="clear_completed">
+                    <p onClick={() => clearCompleted()}>Clear Completed</p>
                 </div>
             </div>
             
