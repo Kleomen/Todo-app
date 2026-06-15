@@ -3,6 +3,15 @@
 *.fig
 *.xd
 
+#Todo-App
+node_modules/
+
+# Frontend
+
+
+# Backend
+
+
 # Dependencies
 .venv/
 venv/
