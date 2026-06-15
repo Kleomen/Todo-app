@@ -1,63 +1,61 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = 3000;
 app.use(express.json());
 
+const pool = require('./db');
 
 // GET /api/tasks - Retrieve all tasks
-app.get('/api/tasks', (req, res) => {
-  res.json(tasks);
+app.get('/api/tasks', async (req, res) => {
+  const result = await pool.query('SELECT * FROM tasks');
+  res.json(result.rows);
 });
 
 // POST /api/tasks - Create a new task
-app.post('/api/tasks', (req, res) => {
-  const newTask = {
-    id: crypto.randomUUID(),
-    task_name: req.body.task_name,
-    completed: false,
-  }
-  tasks.push(newTask)
-  res.json(newTask);
-})
+app.post('/api/tasks', async (req, res) => {
+    if (!req.body || !req.body.task_name) {
+        return res.status(400).json({ error: 'Task name is required' });
+    }
+    const result = await pool.query(
+        'INSERT INTO tasks (task_name) VALUES ($1) RETURNING *',
+        [req.body.task_name]
+    );
+    res.json(result.rows[0]);
+});
 
 // PUT /api/tasks/:id - Update a task by ID
-app.put('/api/tasks/:id', (req, res) => {
-  const task = tasks.find(t => t.id === req.params.id);
-  if (!task) {
-    return res.status(404).json({ error: 'Task not found' });
-  }
-   if (!req.body) {
-    return res.status(400).json({ error: 'No data provided' });
-  }
-  if(req.body.task_name) {
-    task.task_name = req.body.task_name;
-  }
-  if(req.body.completed !== undefined) {
-    task.completed = req.body.completed;
-  }
-  res.json(task);
-})
+app.put('/api/tasks/:id', async (req, res) => {
+    if (!req.body) {
+        return res.status(400).json({ error: 'No data provided' });
+    }
+    const task = await pool.query('SELECT * FROM tasks WHERE id = $1', [req.params.id]);
+    if (task.rows.length === 0) {
+        return res.status(404).json({ error: 'Task not found' });
+    }
+    const result = await pool.query(
+        'UPDATE tasks SET task_name = COALESCE($1, task_name), completed = COALESCE($2, completed) WHERE id = $3 RETURNING *',
+        [req.body.task_name || null, req.body.completed !== undefined ? req.body.completed : null, req.params.id]
+    );
+    res.json(result.rows[0]);
+});
 
 //Delete /api/tasks/completed - Delete all completed tasks
-app.delete('/api/tasks/completed', (req, res) => {
-  let hadCompleted = tasks.some(t => t.completed);
-  
-  if (!hadCompleted) {
-    return res.status(404).json({ error: 'No completed tasks found' });
-  }
-
-  tasks = tasks.filter(t => !t.completed);
-  res.json({ message: 'Completed tasks deleted' });
+app.delete('/api/tasks/completed', async (req, res) => {
+    const result = await pool.query('DELETE FROM tasks WHERE completed = true RETURNING *');
+    if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'No completed tasks found' });
+    }
+    res.json({ message: 'Completed tasks deleted', count: result.rows.length });
 });
 
 // Delete /api/tasks/:id - Delete a task by ID
-app.delete('/api/tasks/:id', (req, res) => {
-  const task = tasks.find(t => t.id === req.params.id);
-  if (!task) {
-    return res.status(404).json({ error: 'Task not found' });
-  }
-  tasks.splice(tasks.indexOf(task), 1);
-  res.json({ message: 'Task deleted' });
+app.delete('/api/tasks/:id', async (req, res) => {
+    const result = await pool.query('DELETE FROM tasks WHERE id = $1 RETURNING *', [req.params.id]);
+    if (result.rows.length === 0) {
+        return res.status(404).json({ error: 'Task not found' });
+    }
+    res.json({ message: 'Task deleted', task: result.rows[0] });
 });
 
 // Start the server
