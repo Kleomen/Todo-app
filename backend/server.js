@@ -1,7 +1,7 @@
 require('dotenv').config(); // Load environment variables from .env file
 const express = require('express'); // Import the Express framework
 const app = express(); // Create an instance of the Express application
-const port = 3000; // Define the port number for the server to listen on
+const port = process.env.PORT || 3000;; // Define the port number for the server to listen on
 app.use(express.json());  // Middleware to parse incoming JSON requests
 const cors = require('cors'); // Import the CORS middleware to handle cross-origin requests
 app.use(cors()); // Enable CORS for all routes
