@@ -7,7 +7,7 @@ function Background({ isDarkMode }) {
   return (
     <>
       {/* Layer 1 - Background */}
-      <div className="background">
+      <div className={`background ${isDarkMode ? 'dark' : 'light'}`}>
         <div className="bg-image">
           <img src={isDarkMode ? bgDark : bgLight} className='image'/>
         </div>

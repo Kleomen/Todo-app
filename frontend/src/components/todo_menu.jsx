@@ -2,7 +2,7 @@ import './todo_menu.css';
 import moonIcon from '../pictures/icon-moon.svg'
 import sunIcon from '../pictures/icon-sun.svg'
 import Task from './task';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {DragDropProvider} from '@dnd-kit/react';
 import {useSortable} from '@dnd-kit/react/sortable';
 
@@ -11,24 +11,43 @@ function TodoMenu({ isDarkMode, onToggle }) {
     const [inputText,setInputText] = useState('');
     const [view, setView] = useState("all");
 
-    const toggleCompleted = (id) => {
-        setTasks(tasks.map(task => 
-            task.id === id 
-            ? { ...task, completed: !task.completed }
-            : task                                      
-        ))
+    // Hook for loading the tasks on startup
+    useEffect(() => {
+    fetch('http://localhost:3000/api/tasks')
+        .then(res => res.json())
+        .then(data => setTasks(data));
+    }, []);
+
+    // Function to toggle the completed status of a task in the database and update the state
+    const toggleCompleted = async (id) => {
+        const res = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ completed: !tasks.find(task => task.id === id).completed })
+        });
+        setTasks(tasks.map(task => task.id === id ? {...task, completed: !task.completed} : task));
     }
-    const addTask = (text) => {
-        setTasks([...tasks, {
-            id: crypto.randomUUID(), // or date.now() for a simpler unique ID
-            task_name: text,
-            project_name: "Default",
-            priority: "low",
-            due_date: null,
-            completed: false,
-        }])
+    // Function to update the task name in the database and update the state
+    const onEdit = async (id, newName) => {
+        const res = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ task_name: newName })
+        });
+        setTasks(tasks.map(task => task.id === id ? {...task, task_name: newName} : task));
+    }
+    // Function to add a new task to the database and update the state
+    const addTask = async (text) => {
+        const res = await fetch('http://localhost:3000/api/tasks', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ task_name: text })
+        });
+        const newTask = await res.json();
+        setTasks([...tasks, newTask]);
     }
 
+    // Function to handle the Enter key press in the input field
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && inputText.trim() !== '') { 
             addTask(inputText)
@@ -36,12 +55,20 @@ function TodoMenu({ isDarkMode, onToggle }) {
         }
     };
 
-    const clearCompleted = () => {
-    setTasks(tasks.filter(task => !task.completed))
+    // Function to clear all completed tasks from the state
+    const clearCompleted = async () => {
+        const res = await fetch(`http://localhost:3000/api/tasks/completed`, {
+            method: 'DELETE',
+        });
+        setTasks(tasks.filter(task => !task.completed));
     }
 
-    const deleteTask = (id) => {
-    setTasks(tasks.filter(task => task.id !== id))
+    // Function to delete a task from the database and update the state
+    const deleteTask = async (id) => {
+         const res = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+            method: 'DELETE',
+        });
+        setTasks(tasks.filter(task => task.id !== id));
     }
 
     const handleDragEnd = (event) => {
@@ -94,6 +121,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
                             completed={task.completed}
                             onToggle={() => toggleCompleted(task.id)}
                             deleteTask={() => deleteTask(task.id)}
+                            onEdit= {(newName) => onEdit(task.id,newName)}                            
                         />
                     ))}
                 </div>

@@ -16,6 +16,18 @@
     color: var(--text-color);
     box-shadow: var(--task-shadow);
 }
+.task p {
+    flex:1; 
+}
+.task input {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    outline: none;
+    flex: 1;
+}
 /*circle*/
 .task .circle{
     width: 3vh;

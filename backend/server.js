@@ -1,10 +1,12 @@
-require('dotenv').config();
-const express = require('express');
-const app = express();
-const port = 3000;
-app.use(express.json());
+require('dotenv').config(); // Load environment variables from .env file
+const express = require('express'); // Import the Express framework
+const app = express(); // Create an instance of the Express application
+const port = 3000; // Define the port number for the server to listen on
+app.use(express.json());  // Middleware to parse incoming JSON requests
+const cors = require('cors'); // Import the CORS middleware to handle cross-origin requests
+app.use(cors()); // Enable CORS for all routes
 
-const pool = require('./db');
+const pool = require('./db'); // Import the database connection pool from db.js
 
 // GET /api/tasks - Retrieve all tasks
 app.get('/api/tasks', async (req, res) => {
@@ -35,7 +37,11 @@ app.put('/api/tasks/:id', async (req, res) => {
     }
     const result = await pool.query(
         'UPDATE tasks SET task_name = COALESCE($1, task_name), completed = COALESCE($2, completed) WHERE id = $3 RETURNING *',
-        [req.body.task_name || null, req.body.completed !== undefined ? req.body.completed : null, req.params.id]
+        [
+        req.body.task_name || null, 
+        req.body.completed !== undefined ? req.body.completed : null,
+        req.params.id
+    ]
     );
     res.json(result.rows[0]);
 });
