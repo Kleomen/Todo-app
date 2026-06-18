@@ -13,7 +13,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
 
     // Hook for loading the tasks on startup
     useEffect(() => {
-    fetch('${import.meta.env.VITE_API_URL}/api/tasks')
+    fetch(`${import.meta.env.VITE_API_URL}/api/tasks`)
         .then(res => res.json())
         .then(data => setTasks(data));
     }, []);
