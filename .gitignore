@@ -51,8 +51,7 @@ npm-debug.log*
 Thumbs.db
 
 # Frontend Mentor starter files (not part of the project)
-index.html
-package-lock.json
-style-guide.md
-preview.jpg
-frontend/src/design/
+/index.html
+/package-lock.json
+/style-guide.md
+/preview.jpg

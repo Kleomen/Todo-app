@@ -13,14 +13,14 @@ function TodoMenu({ isDarkMode, onToggle }) {
 
     // Hook for loading the tasks on startup
     useEffect(() => {
-    fetch('http://localhost:3000/api/tasks')
+    fetch('${import.meta.env.VITE_API_URL}/api/tasks')
         .then(res => res.json())
         .then(data => setTasks(data));
     }, []);
 
     // Function to toggle the completed status of a task in the database and update the state
     const toggleCompleted = async (id) => {
-        const res = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ completed: !tasks.find(task => task.id === id).completed })
@@ -29,7 +29,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
     }
     // Function to update the task name in the database and update the state
     const onEdit = async (id, newName) => {
-        const res = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ task_name: newName })
@@ -38,7 +38,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
     }
     // Function to add a new task to the database and update the state
     const addTask = async (text) => {
-        const res = await fetch('http://localhost:3000/api/tasks', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ task_name: text })
@@ -57,7 +57,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
 
     // Function to clear all completed tasks from the state
     const clearCompleted = async () => {
-        const res = await fetch(`http://localhost:3000/api/tasks/completed`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/completed`, {
             method: 'DELETE',
         });
         setTasks(tasks.filter(task => !task.completed));
@@ -65,7 +65,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
 
     // Function to delete a task from the database and update the state
     const deleteTask = async (id) => {
-         const res = await fetch(`http://localhost:3000/api/tasks/${id}`, {
+         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`, {
             method: 'DELETE',
         });
         setTasks(tasks.filter(task => task.id !== id));
