@@ -10,12 +10,16 @@ function TodoMenu({ isDarkMode, onToggle }) {
     const [tasks,setTasks] = useState([]);
     const [inputText,setInputText] = useState('');
     const [view, setView] = useState("all");
+    const [loading, setLoading] = useState(true);
 
     // Hook for loading the tasks on startup
     useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/tasks`)
-        .then(res => res.json())
-        .then(data => setTasks(data));
+        fetch(`${import.meta.env.VITE_API_URL}/api/tasks`)
+            .then(res => res.json())
+            .then(data => {
+                setTasks(data);
+                setLoading(false);
+            });
     }, []);
 
     // Function to toggle the completed status of a task in the database and update the state
@@ -109,7 +113,11 @@ function TodoMenu({ isDarkMode, onToggle }) {
                 />
             </div>
             
-            {/*Create a task component for each task in the tasks array*/}
+           {loading ? 
+            <div className="loader-container">
+                <div className="loader"></div>
+            </div>
+            : 
             <DragDropProvider onDragEnd={handleDragEnd}>
                 <div className="task_list">
                     {tasks.filter(task => view === "all" ? task : view === "active" ? !task.completed : task.completed).map((task, index) => (
@@ -121,11 +129,12 @@ function TodoMenu({ isDarkMode, onToggle }) {
                             completed={task.completed}
                             onToggle={() => toggleCompleted(task.id)}
                             deleteTask={() => deleteTask(task.id)}
-                            onEdit= {(newName) => onEdit(task.id,newName)}                            
+                            onEdit={(newName) => onEdit(task.id, newName)}                            
                         />
                     ))}
                 </div>
             </DragDropProvider>
+        }
 
             {/* Footer menu */}
             <div className="footer_menu">
