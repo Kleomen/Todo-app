@@ -1,48 +1,49 @@
 # Todo App — Fullstack Project
 
-A fullstack Todo application built as part of a structured journey from Junior to Senior Fullstack Engineer. Started as a [Frontend Mentor](https://www.frontendmentor.io) UI challenge and currently being expanded into a complete fullstack application.
+A fullstack Todo application built as part of a structured journey 
+from Junior to Senior Fullstack Engineer. Started as a 
+[Frontend Mentor](https://www.frontendmentor.io) UI challenge and 
+expanded into a complete fullstack application.
 
-## 🚧 Status: In Active Development
+## Live Demo
+[todo-app-sable-pi-99.vercel.app](https://todo-app-sable-pi-99.vercel.app)
+> Backend uses Render free tier — first load may take ~20 seconds.
 
-| Layer | Status |
-|-------|--------|
-| Frontend UI | 🔄 Complete |
-| React migration + TypeScript | ⏳ In progress |
-| Node.js + Express REST API | ⏳ In progress |
-| PostgreSQL + Prisma ORM | ⏳ Coming next |
-| JWT Authentication | ⏳ Coming next |
-| Testing (Jest + RTL) | ⏳ Coming next |
-| Deployment (Vercel + Railway) | ⏳ Coming next |
+## Tech Stack
+- **Frontend:** React, JavaScript, CSS Variables, Vite
+- **Backend:** Node.js, Express
+- **Database:** PostgreSQL (Neon)
+- **Deployment:** Vercel (frontend), Render (backend), Neon (database)
 
-## 🛠 Planned Stack
+## Features
+- Add, edit, and delete tasks
+- Mark tasks as completed
+- Filter by All / Active / Completed
+- Clear all completed tasks
+- Drag and drop to reorder
+- Dark / Light theme toggle
+- Responsive design
+- Data persists in PostgreSQL database
 
-**Frontend**
-- React + TypeScript
-- Tailwind CSS
-- React Router
+## Run Locally
+```bash
+# Backend
+cd backend
+npm install
+npm run dev
 
-**Backend**
-- Node.js + Express
-- TypeScript
-- PostgreSQL
-- Prisma ORM
+# Frontend
+cd frontend
+npm install
+npm run dev
+```
 
-**Auth**
-- JWT (access token + refresh token)
-- bcrypt
+## Planned
+- TypeScript migration
+- JWT Authentication
+- Jest testing
 
-**Testing**
-- Jest + Supertest (backend)
-- React Testing Library + Vitest (frontend)
-
-**DevOps**
-- Docker + docker-compose
-- GitHub Actions (CI)
-- Deployed on Vercel (frontend) + Railway (backend)
-
-
-## 👨‍💻 Author
-
+## Author
 **Kleomenis Rousias**
 - GitHub: [@Kleomen](https://github.com/Kleomen)
 - LinkedIn: [kleomenis-rousias](https://www.linkedin.com/in/kleomenis-rousias/)
