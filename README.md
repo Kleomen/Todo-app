@@ -30,18 +30,13 @@ expanded into a complete fullstack application.
 # Backend
 cd backend
 npm install
-npm run dev
+node server.js
 
 # Frontend
 cd frontend
 npm install
 npm run dev
 ```
-
-## Planned
-- TypeScript migration
-- JWT Authentication
-- Jest testing
 
 ## Author
 **Kleomenis Rousias**
