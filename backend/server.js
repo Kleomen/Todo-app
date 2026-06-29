@@ -8,6 +8,21 @@ app.use(cors()); // Enable CORS for all routes
 
 const pool = require('./db'); // Import the database connection pool from db.js
 
+// Require a shared bearer token on every /api route.
+// ponytail: shared secret, not per-user accounts — enough to keep bots/casual
+// callers off a public API. Upgrade to real auth + per-user task ownership if
+// this ever holds data for more than one person.
+const API_TOKEN = process.env.API_TOKEN;
+app.use('/api', (req, res, next) => {
+    if (!API_TOKEN) {
+        return res.status(500).json({ error: 'Server auth not configured' });
+    }
+    if (req.headers.authorization !== `Bearer ${API_TOKEN}`) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    next();
+});
+
 // GET /api/tasks - Retrieve all tasks
 app.get('/api/tasks', async (req, res) => {
   const result = await pool.query('SELECT * FROM tasks');

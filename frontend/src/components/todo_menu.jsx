@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import {DragDropProvider} from '@dnd-kit/react';
 import {useSortable} from '@dnd-kit/react/sortable';
 
+const authHeader = { Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}` };
+
 function TodoMenu({ isDarkMode, onToggle }) {
     const [tasks,setTasks] = useState([]);
     const [inputText,setInputText] = useState('');
@@ -14,7 +16,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
 
     // Hook for loading the tasks on startup
     useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL}/api/tasks`)
+        fetch(`${import.meta.env.VITE_API_URL}/api/tasks`, { headers: authHeader })
             .then(res => res.json())
             .then(data => {
                 setTasks(data);
@@ -26,7 +28,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
     const toggleCompleted = async (id) => {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`, {
             method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', ...authHeader},
             body: JSON.stringify({ completed: !tasks.find(task => task.id === id).completed })
         });
         setTasks(tasks.map(task => task.id === id ? {...task, completed: !task.completed} : task));
@@ -35,7 +37,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
     const onEdit = async (id, newName) => {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`, {
             method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', ...authHeader},
             body: JSON.stringify({ task_name: newName })
         });
         setTasks(tasks.map(task => task.id === id ? {...task, task_name: newName} : task));
@@ -44,7 +46,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
     const addTask = async (text) => {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: {'Content-Type': 'application/json', ...authHeader},
             body: JSON.stringify({ task_name: text })
         });
         const newTask = await res.json();
@@ -63,6 +65,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
     const clearCompleted = async () => {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/completed`, {
             method: 'DELETE',
+            headers: authHeader,
         });
         setTasks(tasks.filter(task => !task.completed));
     }
@@ -71,6 +74,7 @@ function TodoMenu({ isDarkMode, onToggle }) {
     const deleteTask = async (id) => {
          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/tasks/${id}`, {
             method: 'DELETE',
+            headers: authHeader,
         });
         setTasks(tasks.filter(task => task.id !== id));
     }
